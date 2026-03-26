@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
 ]
 
 ROOT_URLCONF = 'job_portal_project.urls'
@@ -135,3 +137,4 @@ EMAIL_HOST_USER     = 'preethimtrdc17@gmail.com'      # ← Your Gmail
 EMAIL_HOST_PASSWORD = 'dsto qedy kibt qgmg'    # ← App password
 DEFAULT_FROM_EMAIL  = 'preethimtrdc17@gmail.com'      # ← Same Gmail
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
