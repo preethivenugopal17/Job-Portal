@@ -1,0 +1,49 @@
+{% extends "jobs/base.html" %}
+{% block title %}{{ job.title }} — JobPortal{% endblock %}
+{% block content %}
+<style>
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #1a56db; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    .job-detail-card { background: white; border-radius: 12px; padding: 2.5rem; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+    .job-detail-card h1 { font-size: 1.8rem; color: #111827; margin-bottom: 0.3rem; }
+    .company-name { font-size: 1.1rem; color: #1a56db; font-weight: 600; margin-bottom: 1rem; }
+    .detail-meta { display: flex; flex-wrap: wrap; gap: 1.2rem; padding: 1rem 0; border-top: 1px solid #f3f4f6; border-bottom: 1px solid #f3f4f6; margin-bottom: 1.5rem; font-size: 0.9rem; color: #4b5563; }
+    .section-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 0.8rem; }
+    .description-text { line-height: 1.8; color: #374151; white-space: pre-wrap; }
+    .apply-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #f3f4f6; }
+    .apply-btn { background: #1a56db; color: white; padding: 0.85rem 2.5rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 1rem; display: inline-block; }
+    .apply-btn:hover { background: #1e429f; }
+    .applied-badge { background: #f0fdf4; color: #166534; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; display: inline-block; }
+    .apply-note { font-size: 0.82rem; color: #9ca3af; margin-top: 0.6rem; }
+</style>
+
+<a href="{% url 'jobs:job_list' %}" class="back-link">← Back to all jobs</a>
+
+<div class="job-detail-card">
+    <h1>{{ job.title }}</h1>
+    <p class="company-name">{{ job.company }}</p>
+
+    <div class="detail-meta">
+        <span>📍 {{ job.location }}</span>
+        <span>💼 {{ job.get_job_type_display }}</span>
+        {% if job.salary %}<span>💰 {{ job.salary }}</span>{% endif %}
+        <span>🗓 Posted {{ job.posted_at|date:"F d, Y" }}</span>
+    </div>
+
+    <p class="section-title">Job Description</p>
+    <p class="description-text">{{ job.description }}</p>
+
+    <div class="apply-section">
+        {% if user.is_authenticated %}
+            {% if already_applied %}
+                <span class="applied-badge">✅ You have already applied</span>
+            {% else %}
+                <a href="{% url 'jobs:apply_job' job.pk %}" class="apply-btn">Apply for This Position</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="apply-btn">Login to Apply</a>
+            <p class="apply-note">You need an account to apply for jobs.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

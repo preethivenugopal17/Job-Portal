@@ -1,0 +1,71 @@
+{% extends "jobs/base.html" %}
+{% block title %}Browse Jobs — JobPortal{% endblock %}
+{% block content %}
+<style>
+    .search-section { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center; }
+    .search-section h1 { font-size: 1.8rem; color: #1a56db; margin-bottom: 0.4rem; }
+    .search-section p { color: #6b7280; margin-bottom: 1.2rem; }
+    .search-form { display: flex; gap: 0.5rem; max-width: 550px; margin: 0 auto 1rem; }
+    .search-form input { flex: 1; padding: 0.65rem 1rem; border: 2px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; outline: none; }
+    .search-form input:focus { border-color: #1a56db; }
+    .filter-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .filter-btn { padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.85rem; text-decoration: none; font-weight: 600; background: #e5e7eb; color: #374151; }
+    .filter-btn.active { background: #1a56db; color: white; }
+    .results-info { color: #6b7280; margin-bottom: 1rem; font-size: 0.9rem; }
+    .job-card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-left: 4px solid #1a56db; transition: transform 0.15s; }
+    .job-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .job-card h2 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .job-card h2 a { text-decoration: none; color: #111827; }
+    .job-card h2 a:hover { color: #1a56db; }
+    .job-meta { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.5rem 0 0.8rem; font-size: 0.85rem; color: #6b7280; }
+    .badge { background: #eff6ff; color: #1e429f; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 600; font-size: 0.78rem; }
+    .salary-badge { background: #f0fdf4; color: #166534; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 600; font-size: 0.78rem; margin-left: 6px; }
+    .empty-state { text-align: center; padding: 4rem 2rem; color: #9ca3af; }
+</style>
+
+<div class="search-section">
+    <h1>Find Your Next Opportunity</h1>
+    <p>Search and filter through the latest job listings</p>
+    <form class="search-form" method="GET">
+        <input type="text" name="q" placeholder="Search by title, company, or location…" value="{{ query }}"/>
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if query or job_type %}
+            <a href="{% url 'jobs:job_list' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+    <div class="filter-btns">
+        <a href="?q={{ query }}" class="filter-btn {% if not job_type %}active{% endif %}">All</a>
+        {% for value, label in job_type_choices %}
+            <a href="?q={{ query }}&job_type={{ value }}" class="filter-btn {% if job_type == value %}active{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<p class="results-info">
+    {% if query %}
+        {{ jobs.count }} result{{ jobs.count|pluralize }} for "<strong>{{ query }}</strong>"
+    {% else %}
+        {{ jobs.count }} job{{ jobs.count|pluralize }} available
+    {% endif %}
+</p>
+
+{% if jobs %}
+    {% for job in jobs %}
+    <div class="job-card">
+        <h2><a href="{% url 'jobs:job_detail' job.pk %}">{{ job.title }}</a></h2>
+        <div class="job-meta">
+            <span>🏢 {{ job.company }}</span>
+            <span>📍 {{ job.location }}</span>
+            <span>🕒 {{ job.posted_at|date:"M d, Y" }}</span>
+        </div>
+        <span class="badge">{{ job.get_job_type_display }}</span>
+        {% if job.salary %}<span class="salary-badge">💰 {{ job.salary }}</span>{% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <h3>No jobs found</h3>
+        {% if query %}<p>Try a different search or <a href="{% url 'jobs:job_list' %}">view all jobs</a>.</p>{% endif %}
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "jobs/base.html" %}
+{% block title %}Login — JobPortal{% endblock %}
+{% block content %}
+<style>
+    .auth-card { background: white; border-radius: 12px; padding: 2.5rem; max-width: 480px; margin: 2rem auto; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+    .auth-card h2 { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .auth-card .sub { color: #6b7280; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .form-group input { width: 100%; padding: 0.65rem 1rem; border: 2px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; outline: none; }
+    .form-group input:focus { border-color: #1a56db; }
+    .error-text { font-size: 0.78rem; color: #dc2626; margin-top: 0.3rem; }
+    .submit-btn { width: 100%; background: #1a56db; color: white; border: none; border-radius: 8px; padding: 0.75rem; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+    .submit-btn:hover { background: #1e429f; }
+    .alt-link { text-align: center; margin-top: 1rem; font-size: 0.88rem; color: #6b7280; }
+    .alt-link a { color: #1a56db; font-weight: 600; }
+    .forgot-link { text-align: right; margin-top: -0.8rem; margin-bottom: 1rem; }
+    .forgot-link a { color: #1a56db; font-size: 0.85rem; }
+</style>
+
+<div class="auth-card">
+    <h2>Welcome back</h2>
+    <p class="sub">Sign in to your JobPortal account</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+                <div class="error-text">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <!-- Forgot Password Link -->
+        <div class="forgot-link">
+            <a href="{% url 'accounts:password_reset' %}">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="submit-btn">Sign In</button>
+    </form>
+
+    <div class="alt-link">
+        Don't have an account? <a href="{% url 'accounts:register' %}">Register</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}JobPortal{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #333; }
+        nav {
+            background: #1a56db; padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        nav a.logo { color: white; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 1rem; align-items: center; }
+        .nav-links a {
+            color: white; text-decoration: none; font-size: 0.88rem;
+            padding: 0.3rem 0.8rem; border-radius: 6px;
+        }
+        .nav-links a.register { background: rgba(255,255,255,0.2); }
+        .nav-links a:hover { background: rgba(255,255,255,0.3); }
+        .nav-links span { color: #a3bffa; font-size: 0.88rem; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+        .messages-bar { padding: 0.6rem 2rem; }
+        .msg { padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.88rem; margin-bottom: 0.4rem; }
+        .msg.success { background: #f0fdf4; color: #166534; }
+        .msg.info    { background: #eff6ff; color: #1e429f; }
+        .msg.warning { background: #fffbeb; color: #92400e; }
+        .msg.error   { background: #fef2f2; color: #dc2626; }
+        .btn { display: inline-block; padding: 0.5rem 1.2rem; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; }
+        .btn-primary  { background: #1a56db; color: white; }
+        .btn-primary:hover  { background: #1e429f; }
+        .btn-secondary { background: #e5e7eb; color: #374151; }
+        .btn-secondary:hover { background: #d1d5db; }
+        footer { text-align: center; padding: 2rem; color: #9ca3af; margin-top: 3rem; border-top: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'jobs:job_list' %}" class="logo">🏢 JobPortal</a>
+    <div class="nav-links">
+        {% if user.is_authenticated %}
+            <span>Hi, {{ user.username }}</span>
+            <a href="{% url 'accounts:logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}">Login</a>
+            <a href="{% url 'accounts:register' %}" class="register">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+{% if messages %}
+<div class="messages-bar">
+    {% for message in messages %}
+        <div class="msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+    <p>© 2025 JobPortal — Built with Django</p>
+</footer>
+
+</body>
+</html>

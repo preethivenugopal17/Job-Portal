@@ -1,0 +1,49 @@
+{% extends "jobs/base.html" %}
+{% block title %}Apply — {{ job.title }}{% endblock %}
+{% block content %}
+<style>
+    .back-link { display: inline-block; margin-bottom: 1.5rem; color: #1a56db; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    .apply-card { background: white; border-radius: 12px; padding: 2.5rem; max-width: 600px; margin: 0 auto; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+    .apply-card h2 { font-size: 1.4rem; margin-bottom: 0.3rem; color: #111827; }
+    .apply-card .sub { color: #6b7280; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: #111827; }
+    .error-text { font-size: 0.78rem; color: #dc2626; margin-top: 0.3rem; }
+    .file-note { font-size: 0.78rem; color: #9ca3af; margin-top: 0.3rem; }
+    .submit-btn { background: #1a56db; color: white; border: none; border-radius: 8px; padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+    .submit-btn:hover { background: #1e429f; }
+</style>
+
+<a href="{% url 'jobs:job_detail' job.pk %}" class="back-link">← Back to job</a>
+
+<div class="apply-card">
+    <h2>Apply for {{ job.title }}</h2>
+    <p class="sub">{{ job.company }} — {{ job.location }}</p>
+
+    <form method="POST" enctype="multipart/form-data">  <!-- ← enctype is important!! -->
+        {% csrf_token %}
+
+        <!-- Cover Letter -->
+        <div class="form-group">
+            <label>{{ form.cover_letter.label }}</label>
+            {{ form.cover_letter }}
+            {% for error in form.cover_letter.errors %}
+                <p class="error-text">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Resume Upload -->
+        <div class="form-group">
+            <label>{{ form.resume.label }}</label>
+            {{ form.resume }}
+            <p class="file-note">PDF only — Maximum 5MB</p>
+            {% for error in form.resume.errors %}
+                <p class="error-text">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Application</button>
+    </form>
+</div>
+{% endblock %}

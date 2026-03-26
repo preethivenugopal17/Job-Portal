@@ -1,0 +1,25 @@
+{% if messages %}
+  <div style="padding:0.6rem 2rem; background:#f0fdf4;">
+    {% for message in messages %}
+      <p style="color:#166534; font-size:0.88rem;">{{ message }}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<nav>
+    <a href="{% url 'jobs:job_list' %}">🏢 JobPortal</a>
+    <div style="display:flex; gap:1rem; align-items:center;">
+        {% if user.is_authenticated %}
+            <span style="color:#a3bffa; font-size:0.9rem;">Hi, {{ user.username }}</span>
+            <a href="{% url 'accounts:logout' %}"
+               style="color:white; font-size:0.85rem; background:rgba(255,255,255,0.15);
+                      padding:0.3rem 0.8rem; border-radius:6px;">Logout</a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}"
+               style="color:white; font-size:0.85rem;">Login</a>
+            <a href="{% url 'accounts:register' %}"
+               style="color:white; font-size:0.85rem; background:rgba(255,255,255,0.2);
+                      padding:0.3rem 0.8rem; border-radius:6px;">Register</a>
+        {% endif %}
+    </div>
+</nav>
