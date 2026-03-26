@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
 from .models import Job, Application
 from .forms import ApplicationForm
 from .utils import (
@@ -104,3 +105,12 @@ def apply_job(request, pk):
         'form': form,
         'job':  job,
     })
+
+def create_admin(request):
+    if not User.objects.filter(username='preethi').exists():
+        User.objects.create_superuser(
+            username='preethi',
+            email='your@email.com',
+            password='1234'
+        )
+    return HttpResponse("Admin created")
